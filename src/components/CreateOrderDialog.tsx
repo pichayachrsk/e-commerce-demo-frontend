@@ -1,6 +1,8 @@
 "use client";
 
 import { memo } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Box,
   Typography,
@@ -18,6 +20,7 @@ import {
 import { LoadingButton } from "@mui/lab";
 import { ProductRow } from "./ProductRow";
 import { Product, STATUS_OPTIONS } from "@/lib/types";
+import { createOrderSchema } from "@/lib/schemas";
 
 type CreateOrderDialogProps = {
   open: boolean;
@@ -63,6 +66,17 @@ export const CreateOrderDialog = memo(function CreateOrderDialog({
   isPending,
   hasSelectedProducts,
 }: CreateOrderDialogProps) {
+  const {
+    formState: { errors: formErrors },
+  } = useForm({
+    resolver: zodResolver(createOrderSchema),
+    defaultValues: {
+      items: Object.entries(selectedProducts).map(([productId, { quantity }]) => ({
+        productId,
+        quantity,
+      })),
+    },
+  });
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <Box sx={{ p: 3 }}>
@@ -74,11 +88,15 @@ export const CreateOrderDialog = memo(function CreateOrderDialog({
             label="Recipient Name"
             value={formData.shippingName}
             onChange={(e) => onFormChange("shippingName", e.target.value)}
+            error={!formData.shippingName}
+            helperText={!formData.shippingName ? "Recipient name is required" : ""}
           />
           <TextField
             label="Phone"
             value={formData.shippingPhone}
             onChange={(e) => onFormChange("shippingPhone", e.target.value)}
+            error={!formData.shippingPhone}
+            helperText={!formData.shippingPhone ? "Phone number is required" : ""}
           />
           <TextField
             label="Address"
@@ -86,16 +104,22 @@ export const CreateOrderDialog = memo(function CreateOrderDialog({
             onChange={(e) => onFormChange("shippingAddress", e.target.value)}
             multiline
             minRows={2}
+            error={!formData.shippingAddress}
+            helperText={!formData.shippingAddress ? "Address is required" : ""}
           />
           <TextField
             label="Province"
             value={formData.shippingProvince}
             onChange={(e) => onFormChange("shippingProvince", e.target.value)}
+            error={!formData.shippingProvince}
+            helperText={!formData.shippingProvince ? "Province is required" : ""}
           />
           <TextField
             label="Postal Code"
             value={formData.shippingPostalCode}
             onChange={(e) => onFormChange("shippingPostalCode", e.target.value)}
+            error={!formData.shippingPostalCode}
+            helperText={!formData.shippingPostalCode ? "Postal code is required" : ""}
           />
           <FormControl fullWidth>
             <InputLabel>Status</InputLabel>

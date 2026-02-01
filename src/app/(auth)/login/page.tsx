@@ -1,24 +1,31 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "@/hooks/useAuth";
+import { loginSchema, type LoginFormValues } from "@/lib/schemas";
 import { Box, Paper, TextField, Typography, Container, Alert } from "@/lib/mui";
 import { LoadingButton } from "@mui/lab";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const { login } = useAuth();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setError: setFormError,
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
+  const onSubmit = async (data: LoginFormValues) => {
     try {
-      await login({ email, password });
+      await login(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Login failed");
+      setFormError("root", {
+        message: err instanceof Error ? err.message : "Login failed",
+      });
     }
   };
 
@@ -53,15 +60,9 @@ export default function LoginPage() {
             Login
           </Typography>
 
-          {error && (
-            <Alert severity="error" sx={{ mb: 2 }}>
-              {error}
-            </Alert>
-          )}
-
           <Box
             component="form"
-            onSubmit={handleSubmit}
+            onSubmit={handleSubmit(onSubmit)}
             sx={{ display: "flex", flexDirection: "column", gap: 2 }}
           >
             <TextField
@@ -70,9 +71,9 @@ export default function LoginPage() {
               label="Email"
               type="email"
               variant="outlined"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
+              {...register("email")}
+              error={!!errors.email}
+              helperText={errors.email?.message}
               autoComplete="email"
               autoFocus
             />
@@ -83,9 +84,9 @@ export default function LoginPage() {
               label="Password"
               type="password"
               variant="outlined"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
+              {...register("password")}
+              error={!!errors.password}
+              helperText={errors.password?.message}
               autoComplete="current-password"
             />
 
@@ -94,6 +95,7 @@ export default function LoginPage() {
               fullWidth
               variant="contained"
               size="large"
+              loading={isSubmitting}
               sx={{ mt: 1 }}
             >
               Login

@@ -1,44 +1,46 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Box,
   Paper,
   Typography,
   TextField,
   Alert,
-  LoadingButton,
   Checkbox,
   FormControlLabel,
 } from "@/lib/mui";
+import { LoadingButton } from "@mui/lab";
 import { useAuth } from "@/hooks/useAuth";
+import { registerSchema, type RegisterFormValues, type RegisterSubmitValues } from "@/lib/schemas";
 
 export default function RegisterPage() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [acceptedTerms, setAcceptedTerms] = useState(false);
-  const [error, setError] = useState("");
-  const { register } = useAuth();
+  const { register: registerUser } = useAuth();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setError: setFormError,
+  } = useForm<RegisterFormValues>({
+    resolver: zodResolver(registerSchema),
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-
-    if (password !== confirmPassword) {
-      setError("Passwords do not match");
-      return;
+  const onSubmit = async (data: RegisterFormValues) => {
+    try {
+      const submitData: RegisterSubmitValues = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        password: data.password,
+      };
+      await registerUser(submitData);
+    } catch (err) {
+      setFormError("root", {
+        message: err instanceof Error ? err.message : "Registration failed",
+      });
     }
-
-    if (!acceptedTerms) {
-      setError("Please accept the Terms and Conditions");
-      return;
-    }
-
-    await register({ firstName, lastName, email, password });
   };
 
   return (
@@ -52,19 +54,14 @@ export default function RegisterPage() {
       >
         Register
       </Typography>
-      <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
-        {error && (
-          <Alert severity="error" sx={{ mb: 2 }}>
-            {error}
-          </Alert>
-        )}
+      <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ mt: 3 }}>
         <TextField
           fullWidth
           label="First Name"
           type="text"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-          required
+          {...register("firstName")}
+          error={!!errors.firstName}
+          helperText={errors.firstName?.message}
           margin="normal"
           autoComplete="given-name"
         />
@@ -72,9 +69,9 @@ export default function RegisterPage() {
           fullWidth
           label="Last Name"
           type="text"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-          required
+          {...register("lastName")}
+          error={!!errors.lastName}
+          helperText={errors.lastName?.message}
           margin="normal"
           autoComplete="family-name"
         />
@@ -82,9 +79,9 @@ export default function RegisterPage() {
           fullWidth
           label="Email"
           type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
+          {...register("email")}
+          error={!!errors.email}
+          helperText={errors.email?.message}
           margin="normal"
           autoComplete="email"
         />
@@ -92,9 +89,9 @@ export default function RegisterPage() {
           fullWidth
           label="Password"
           type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
+          {...register("password")}
+          error={!!errors.password}
+          helperText={errors.password?.message}
           margin="normal"
           autoComplete="new-password"
         />
@@ -102,18 +99,17 @@ export default function RegisterPage() {
           fullWidth
           label="Confirm Password"
           type="password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          required
+          {...register("confirmPassword")}
+          error={!!errors.confirmPassword}
+          helperText={errors.confirmPassword?.message}
           margin="normal"
           autoComplete="new-password"
         />
         <FormControlLabel
           control={
             <Checkbox
-              checked={acceptedTerms}
-              onChange={(e) => setAcceptedTerms(e.target.checked)}
               color="primary"
+              {...register("acceptedTerms")}
             />
           }
           label={
@@ -129,12 +125,18 @@ export default function RegisterPage() {
           }
           sx={{ mt: 1 }}
         />
+        {errors.acceptedTerms && (
+          <Typography variant="body2" color="error" sx={{ mt: 0.5 }}>
+            {errors.acceptedTerms.message}
+          </Typography>
+        )}
         <LoadingButton
           fullWidth
           type="submit"
           variant="contained"
           sx={{ mt: 3, mb: 2 }}
           size="large"
+          loading={isSubmitting}
         >
           Register
         </LoadingButton>
