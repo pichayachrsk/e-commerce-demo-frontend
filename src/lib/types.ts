@@ -7,11 +7,6 @@ export interface User {
   updatedAt: string;
 }
 
-export interface AuthResponse {
-  user: User;
-  token: string;
-}
-
 export interface LoginCredentials {
   email: string;
   password: string;
@@ -80,3 +75,22 @@ export interface PaginatedResponse<T> {
     totalPages: number;
   };
 }
+
+export interface ApiResponse<T> {
+  data: DataResponse<T>;
+  success: boolean;
+  message: string;
+  status: number;
+}
+
+interface DataResponse<T> {
+  data: T[]
+}
+
+export const STATUS_OPTIONS = [
+  "pending",
+  "confirmed",
+  "shipped",
+  "delivered",
+  "cancelled",
+] as const;

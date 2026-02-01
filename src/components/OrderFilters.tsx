@@ -2,14 +2,7 @@
 
 import { memo } from "react";
 import { Box, FormControl, InputLabel, Select, MenuItem } from "@/lib/mui";
-
-const STATUS_OPTIONS = [
-  "pending",
-  "confirmed",
-  "shipped",
-  "delivered",
-  "cancelled",
-] as const;
+import { STATUS_OPTIONS } from "@/lib/types";
 
 type OrderFiltersProps = {
   status?: string;

@@ -92,7 +92,7 @@ class ApiClient {
 
         if (typeof window !== "undefined") {
           const currentPath = window.location.pathname;
-          if (currentPath !== "/login" && currentPath !== "/register") {
+          if (currentPath !== "/login" && currentPath !== "/register" && currentPath !== "/") {
             window.location.href = "/login";
           }
         }

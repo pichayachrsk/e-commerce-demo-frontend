@@ -30,12 +30,10 @@ export {
   IconButton,
 } from '@mui/material';
 
-// Material-UI Lab
 export { LoadingButton } from '@mui/lab';
 
-// Material-UI Icons
-export { 
-  ShoppingCart, 
-  Lock, 
+export {
+  ShoppingCart,
+  Lock,
   Speed
 } from '@mui/icons-material';

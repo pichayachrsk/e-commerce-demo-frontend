@@ -2,7 +2,6 @@
 
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { api } from "@/lib/api";
-import { mockOrders } from "@/lib/mockData";
 import type { Order } from "@/lib/types";
 
 interface OrderFilters {
@@ -13,8 +12,6 @@ interface OrderFilters {
   limit?: number;
   customerId?: string;
 }
-
-const USE_MOCK_DATA = process.env.NEXT_PUBLIC_USE_MOCK_DATA === "true";
 
 export function useOrder(filters?: OrderFilters) {
   return useQuery({

@@ -17,15 +17,7 @@ import {
 } from "@/lib/mui";
 import { LoadingButton } from "@mui/lab";
 import { ProductRow } from "./ProductRow";
-import { Product } from "@/lib/types";
-
-const STATUS_OPTIONS = [
-  "pending",
-  "confirmed",
-  "shipped",
-  "delivered",
-  "cancelled",
-] as const;
+import { Product, STATUS_OPTIONS } from "@/lib/types";
 
 type CreateOrderDialogProps = {
   open: boolean;

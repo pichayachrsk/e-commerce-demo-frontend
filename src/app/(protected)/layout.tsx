@@ -25,7 +25,6 @@ export default function ProtectedLayout({
   children: React.ReactNode;
 }) {
   const { user, logout, isLoading } = useAuth();
-  const [isFetching, setIsFetching] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
 
 
@@ -39,7 +38,7 @@ export default function ProtectedLayout({
     { label: "Orders", href: "/order" },
   ];
 
-  if (isFetching || isLoading) {
+  if (isLoading) {
     return (
       <Box
         sx={{
