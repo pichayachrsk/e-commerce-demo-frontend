@@ -59,7 +59,7 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## 📂 Folder Structure
+## Folder Structure
 
 - `src/app/`: Next.js App Router pages and layouts.
 - `src/components/`: Reusable UI components.
@@ -68,7 +68,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - `src/providers/`: React Context providers (Auth, Query).
 - `src/types/`: TypeScript interfaces and types.
 
-## 🔒 Authentication Logic
+## Authentication Logic
 
 The application implements a robust authentication flow in `src/lib/api.ts` which includes:
 - Intercepting 401 Unauthorized errors.
@@ -76,6 +76,6 @@ The application implements a robust authentication flow in `src/lib/api.ts` whic
 - Retrying the original request after a successful refresh.
 - Redirect loop protection if the refresh fails or the user is already on the login page.
 
-## 📄 License
+## License
 
 This project is for demonstration purposes.
