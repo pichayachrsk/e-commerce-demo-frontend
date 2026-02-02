@@ -48,7 +48,7 @@ A modern, responsive e-commerce web application built with Next.js, Material UI,
 3. Set up environment variables:
    Create a `.env.local` file in the root directory and add:
    ```env
-   NEXT_PUBLIC_API_URL=http://localhost:3001/api
+   NEXT_PUBLIC_API_URL=http://localhost:3001/api/v1
    ```
 
 ### Running the Development Server
