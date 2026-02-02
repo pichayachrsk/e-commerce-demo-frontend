@@ -22,7 +22,7 @@ A modern, responsive e-commerce web application built with Next.js, Material UI,
     - Responsive product rows that adapt to mobile screens.
 - **Order Management:**
     - Creating and managing orders.
-    - Filtering and searching orders.
+    - Filtering orders.
 - **Responsive Design:** Optimized for mobile, tablet, and desktop views.
 
 ## Getting Started
